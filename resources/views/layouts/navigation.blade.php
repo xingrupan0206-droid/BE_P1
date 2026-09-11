@@ -18,6 +18,15 @@
                 </div>
             </div>
 
+            @if (Auth::check() && in_array(Auth::user()->rolename, ['patient']))
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('klant.index')"
+                                :active="request()->routeIs('klant.index')">
+                        {{ __('klant') }}
+                    </x-nav-link>
+                </div>
+            @endif
+
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">

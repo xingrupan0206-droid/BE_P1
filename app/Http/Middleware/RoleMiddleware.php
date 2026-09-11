@@ -22,9 +22,17 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
+        $allowedRoles = [];
+
+        foreach ($roles as $role) {
+            foreach (explode(',', $role) as $rolePart) {
+                $allowedRoles[] = strtolower(trim($rolePart));
+            }
+        }
+
         $userRole = strtolower($user->rolename ?? '');
 
-        if (!in_array($userRole, array_map('strtolower', $roles))) {
+        if (!in_array($userRole, $allowedRoles)) {
             abort(403, 'Onvoldoende rechten');
         }
 

@@ -48,6 +48,13 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        $role = strtolower($user->rolename ?? '');
+
+        return match($role) {
+            'klant' => redirect()->route('klant.index'),
+            'admin' => redirect()->route('admin.index'),
+            'magazijnmedewerker' => redirect()->route('magazijnmedewerker.index'),
+            default => redirect()->route('dashboard'),
+        };
     }
 }

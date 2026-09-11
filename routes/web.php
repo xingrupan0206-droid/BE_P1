@@ -10,17 +10,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
 Route::get('/admin', [adminController::class, 'index'])
     ->name('admin.index')
     ->middleware(['auth', 'role:admin']);
 
 Route::get('/magazijnmedewerker', [magazijnmedewerkerController::class, 'index'])
     ->name('magazijnmedewerker.index')
-    ->middleware(['auth', 'role:magazijnmedewerker']);
+    ->middleware(['auth', 'role:magazijnmedewerker,admin']);
 
 Route::get('/klant', [klantController::class, 'index'])
     ->name('klant.index')
-    ->middleware(['auth', 'role:klant']);
+    ->middleware(['auth', 'role:klant,magazijnmedewerker,admin']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
