@@ -22,7 +22,7 @@ Route::get('/magazijnmedewerker', [magazijnmedewerkerController::class, 'index']
 
 Route::get('/klant', [klantController::class, 'index'])
     ->name('klant.index')
-    ->middleware(['auth', 'role:klant,magazijnmedewerker,admin']);
+    ->middleware(['auth', 'role:klant,admin']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

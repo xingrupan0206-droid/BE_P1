@@ -11,21 +11,34 @@
                 </div>
 
                 <!-- Navigation Links -->
+                @php
+                    $userRole = strtolower(Auth::user()->rolename ?? '');
+                @endphp
+
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @if ($userRole === 'admin')
+                        <x-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')">
+                            {{ __('Admin') }}
+                        </x-nav-link>
+                    @endif
+
+                    @if (in_array($userRole, ['admin', 'magazijnmedewerker']))
+                        <x-nav-link :href="route('magazijnmedewerker.index')" :active="request()->routeIs('magazijnmedewerker.index')">
+                            {{ __('Magazijnmedewerker') }}
+                        </x-nav-link>
+                    @endif
+
+                    @if (in_array($userRole, ['admin', 'klant']))
+                        <x-nav-link :href="route('klant.index')" :active="request()->routeIs('klant.index')">
+                            {{ __('Klant') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
-
-            @if (Auth::check() && in_array(Auth::user()->rolename, ['patient']))
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('klant.index')"
-                                :active="request()->routeIs('klant.index')">
-                        {{ __('klant') }}
-                    </x-nav-link>
-                </div>
-            @endif
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -79,6 +92,24 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @if ($userRole === 'admin')
+                <x-responsive-nav-link :href="route('admin.index')" :active="request()->routeIs('admin.index')">
+                    {{ __('Admin') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if (in_array($userRole, ['admin', 'magazijnmedewerker']))
+                <x-responsive-nav-link :href="route('magazijnmedewerker.index')" :active="request()->routeIs('magazijnmedewerker.index')">
+                    {{ __('Magazijnmedewerker') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if (in_array($userRole, ['admin', 'klant']))
+                <x-responsive-nav-link :href="route('klant.index')" :active="request()->routeIs('klant.index')">
+                    {{ __('Klant') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
