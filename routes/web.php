@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\adminController;
 use App\Http\Controllers\klantController;
+use App\Http\Controllers\magazijncontroller;
 use App\Http\Controllers\magazijnmedewerkerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -10,14 +11,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-
 Route::get('/admin', [adminController::class, 'index'])
     ->name('admin.index')
     ->middleware(['auth', 'role:admin']);
 
 Route::get('/magazijnmedewerker', [magazijnmedewerkerController::class, 'index'])
     ->name('magazijnmedewerker.index')
+    ->middleware(['auth', 'role:magazijnmedewerker,admin']);
+
+Route::get('/magazijn', [magazijncontroller::class, 'index'])
+    ->name('magazijn.index')
     ->middleware(['auth', 'role:magazijnmedewerker,admin']);
 
 Route::get('/klant', [klantController::class, 'index'])
