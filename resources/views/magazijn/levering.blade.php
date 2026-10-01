@@ -46,7 +46,7 @@
                     </table>
                 </div>
 
-                <a class="inline-block mt-4 text-blue-700 underline" href="{{ route('magazijn.index') }}">Terug naar Overzicht Magazijn Jamin</a>
+                <a class="inline-block mt-4 border border-gray-300 rounded-md px-4 py-2 text-gray-900 hover:bg-gray-100" href="{{ route('magazijn.index') }}">Terug</a>
             </div>
         </div>
     </div>
