@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\adminController;
 use App\Http\Controllers\AllergeenController;
+use App\Http\Controllers\LeveringController;
 use App\Http\Controllers\klantController;
 use App\Http\Controllers\magazijncontroller;
 use App\Http\Controllers\magazijnmedewerkerController;
@@ -37,6 +38,10 @@ Route::get('/magazijn/{productId}/allergenen', [AllergeenController::class, 'sho
     ->middleware(['auth', 'role:magazijnmedewerker,admin'])
     ->name('magazijn.allergenen');
 
+Route::get('/magazijn/{productId}/leveringen', [LeveringController::class, 'show'])
+    ->whereNumber('productId')
+    ->middleware(['auth', 'role:magazijnmedewerker,admin'])
+    ->name('magazijn.leveringen');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

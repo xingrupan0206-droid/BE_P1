@@ -3,7 +3,7 @@
         Overzicht Allergenen
     </h2>
 
-    <p><strong>Naam:</strong> <span id="allergenen-productnaam"></span></p>
+    <p><strong>Naam Product:</strong> <span id="allergenen-productnaam"></span></p>
     <p><strong>Barcode:</strong> <span id="allergenen-barcode"></span></p>
 
     <div id="allergenen-inhoud" class="mt-4" aria-live="polite"></div>
@@ -17,8 +17,15 @@
 
 <script>
     let allergenenVerzoek = 0;
+    let allergenenTimer;
+
+    document.getElementById('allergenen-kaart').addEventListener('close', () => {
+        clearTimeout(allergenenTimer);
+        allergenenVerzoek++;
+    });
 
     async function toonAllergenen(knop) {
+        clearTimeout(allergenenTimer);
         const verzoek = ++allergenenVerzoek;
         const kaart = document.getElementById('allergenen-kaart');
         const inhoud = document.getElementById('allergenen-inhoud');
@@ -50,10 +57,6 @@
 
             inhoud.replaceChildren();
 
-            if (allergenen.length === 0) {
-                inhoud.textContent = 'Geen allergenen geregistreerd voor dit product.';
-                return;
-            }
 
             const tabel = document.createElement('table');
             tabel.className = 'w-full border-collapse text-left';
@@ -68,6 +71,17 @@
             }
 
             const rijen = tabel.createTBody();
+            if (allergenen.length === 0) {
+                const cel = rijen.insertRow().insertCell();
+                cel.colSpan = 2;
+                cel.className = 'border p-3';
+                cel.textContent = 'In dit product zitten geen stoffen die een allergische reactie kunnen veroorzaken';
+                inhoud.appendChild(tabel);
+                allergenenTimer = setTimeout(() => {
+                    window.location.assign(@json(route('magazijn.index')));
+                }, 4000);
+                return;
+            }
             for (const allergeen of allergenen) {
                 const rij = rijen.insertRow();
                 for (const waarde of [allergeen.Naam, allergeen.Omschrijving]) {

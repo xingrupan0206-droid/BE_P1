@@ -32,15 +32,15 @@
                                                 <button
                                                     type="button"
                                                     onclick="toonAllergenen(this)"
-                                                    class="text-blue-700 underline"
+                                                    class="text-red-600 text-xl font-bold" aria-label="Allergenen bekijken"
                                                     data-naam="{{ $product->Naam }}"
                                                     data-barcode="{{ $product->Barcode }}"
                                                     data-url="{{ route('magazijn.allergenen', $product->Id) }}"
                                                 >
-                                                    Bekijken
+                                                    <span aria-hidden="true" style="color: #dc2626;">×</span>
                                                 </button>
                                         </td>
-                                        <td class="p-3"></td>
+                                        <td class="p-3"><a class="text-blue-700 text-xl font-bold" href="{{ route('magazijn.leveringen', $product->Id) }}" aria-label="Leveringsinformatie bekijken"><span aria-hidden="true">?</span></a></td>
                                     </tr>
                                 @empty
                                     <tr><td colspan="6" class="p-3">Er zijn geen producten in het magazijn.</td></tr>
