@@ -28,7 +28,18 @@
                                         <td class="p-3">{{ $product->Naam }}</td>
                                         <td class="p-3">{{ number_format($product->VerpakkingsEenheid, 2, ',', '.') }}</td>
                                         <td class="p-3">{{ $product->AantalAanwezig ?? 'Onbekend' }}</td>
-                                        <td class="p-3"></td>
+                                        <td class="p-3">
+                                                <button
+                                                    type="button"
+                                                    onclick="toonAllergenen(this)"
+                                                    class="text-blue-700 underline"
+                                                    data-naam="{{ $product->Naam }}"
+                                                    data-barcode="{{ $product->Barcode }}"
+                                                    data-url="{{ route('magazijn.allergenen', $product->Id) }}"
+                                                >
+                                                    Bekijken
+                                                </button>
+                                        </td>
                                         <td class="p-3"></td>
                                     </tr>
                                 @empty
@@ -41,5 +52,5 @@
             </div>
         </div>
     </div>
+    @include('magazijn.allergeen')
 </x-app-layout>
-

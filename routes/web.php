@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\adminController;
+use App\Http\Controllers\AllergeenController;
 use App\Http\Controllers\klantController;
 use App\Http\Controllers\magazijncontroller;
 use App\Http\Controllers\magazijnmedewerkerController;
@@ -30,6 +31,11 @@ Route::get('/klant', [klantController::class, 'index'])
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/magazijn/{productId}/allergenen', [AllergeenController::class, 'show'])
+    ->whereNumber('productId')
+    ->middleware(['auth', 'role:magazijnmedewerker,admin'])
+    ->name('magazijn.allergenen');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
