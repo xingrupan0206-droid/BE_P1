@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -10,7 +11,55 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::unprepared(file_get_contents(database_path('migrations/laravel.sql')));
+        Schema::create('Product', function (Blueprint $table): void {
+            $table->increments('Id');
+            $table->string('Naam', 100);
+            $table->string('Barcode', 13)->unique();
+        });
+
+        Schema::create('Allergeen', function (Blueprint $table): void {
+            $table->increments('Id');
+            $table->string('Naam', 100);
+            $table->string('Omschrijving', 255);
+        });
+
+        Schema::create('Leverancier', function (Blueprint $table): void {
+            $table->increments('Id');
+            $table->string('Naam', 100);
+            $table->string('ContactPersoon', 100);
+            $table->string('LeverancierNummer', 20)->unique();
+            $table->string('Mobiel', 20);
+        });
+
+        Schema::create('Magazijn', function (Blueprint $table): void {
+            $table->increments('Id');
+            $table->unsignedInteger('ProductId');
+            $table->decimal('VerpakkingsEenheid', 5, 2);
+            $table->unsignedInteger('AantalAanwezig')->nullable();
+
+            $table->foreign('ProductId')->references('Id')->on('Product');
+        });
+
+        Schema::create('ProductPerAllergeen', function (Blueprint $table): void {
+            $table->increments('Id');
+            $table->unsignedInteger('ProductId');
+            $table->unsignedInteger('AllergeenId');
+
+            $table->foreign('ProductId')->references('Id')->on('Product');
+            $table->foreign('AllergeenId')->references('Id')->on('Allergeen');
+        });
+
+        Schema::create('ProductPerLeverancier', function (Blueprint $table): void {
+            $table->increments('Id');
+            $table->unsignedInteger('LeverancierId');
+            $table->unsignedInteger('ProductId');
+            $table->date('DatumLevering');
+            $table->unsignedInteger('Aantal');
+            $table->date('DatumEerstVolgendeLevering')->nullable();
+
+            $table->foreign('LeverancierId')->references('Id')->on('Leverancier');
+            $table->foreign('ProductId')->references('Id')->on('Product');
+        });
     }
 
     /**
@@ -18,15 +67,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
-        DB::statement('DROP TABLE IF EXISTS ProductPerAllergeen');
-        DB::statement('DROP TABLE IF EXISTS ProductPerLeverancier');
-        DB::statement('DROP TABLE IF EXISTS Magazijn');
-        DB::statement('DROP TABLE IF EXISTS Leverancier');
-        DB::statement('DROP TABLE IF EXISTS Product');
-        DB::statement('DROP TABLE IF EXISTS Allergeen');
-
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        Schema::dropIfExists('ProductPerLeverancier');
+        Schema::dropIfExists('ProductPerAllergeen');
+        Schema::dropIfExists('Magazijn');
+        Schema::dropIfExists('Leverancier');
+        Schema::dropIfExists('Allergeen');
+        Schema::dropIfExists('Product');
     }
 };
