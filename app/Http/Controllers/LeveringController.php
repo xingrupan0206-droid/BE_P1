@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Levering;
-use Illuminate\Support\Facades\DB;
+use App\Models\Magazijn;
+use App\Models\Product;
 use Illuminate\View\View;
 
 class LeveringController extends Controller
 {
     public function show(int $productId): View
     {
-        $product = DB::table('Product')->where('Id', $productId)->first();
+        $product = Product::query()->find($productId);
         abort_if($product === null, 404);
 
-        $voorraad = DB::table('Magazijn')->where('ProductId', $productId)->sum('AantalAanwezig');
+        $voorraad = Magazijn::voorraadVoorProduct($productId);
         $leveringen = Levering::voorProduct($productId);
 
         return view('magazijn.levering', [

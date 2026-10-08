@@ -12,7 +12,7 @@ class Allergeen extends Model
     protected $primaryKey = 'Id';
     public $timestamps = false;
 
-    public static function getAllergeen(int $productId): Collection
+    public static function allergenenVoorProduct(int $productId): Collection
     {
         return DB::table('Allergeen')
             ->join('ProductPerAllergeen', 'Allergeen.Id', '=', 'ProductPerAllergeen.AllergeenId')
