@@ -10,8 +10,7 @@ class MagazijnmedewerkerController extends Controller
     public function index()
     {
         return view('magazijnmedewerker.index', [
-            'title' => 'Magazijnmedewerker Page'
+            'title' => 'Magazijnmedewerker',
         ]);
     }
-
 }

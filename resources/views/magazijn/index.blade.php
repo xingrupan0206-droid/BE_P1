@@ -17,8 +17,8 @@
                                     <th scope="col" class="p-3">Naam</th>
                                     <th scope="col" class="p-3">Verpakkingseenheid</th>
                                     <th scope="col" class="p-3">Aantal aanwezig</th>
-                                    <th scope="col" class="p-3">Allergeen Info</th>
-                                    <th scope="col" class="p-3">Leverantie Info</th>
+                                    <th scope="col" class="p-3 text-center">Allergeen Info</th>
+                                    <th scope="col" class="p-3 text-center">Leverantie Info</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -28,7 +28,7 @@
                                         <td class="p-3">{{ $product->Naam }}</td>
                                         <td class="p-3">{{ number_format($product->VerpakkingsEenheid, 2, ',', '.') }}</td>
                                         <td class="p-3">{{ $product->AantalAanwezig ?? 'Onbekend' }}</td>
-                                        <td class="p-3">
+                                        <td class="p-3 text-center">
                                                 <button
                                                     type="button"
                                                     onclick="toonAllergenen(this)"
@@ -40,7 +40,7 @@
                                                     <span aria-hidden="true" style="color: #dc2626;">×</span>
                                                 </button>
                                         </td>
-                                        <td class="p-3"><a class="text-blue-700 text-xl font-bold" href="{{ route('magazijn.leveringen', $product->Id) }}" aria-label="Leveringsinformatie bekijken"><span aria-hidden="true">?</span></a></td>
+                                        <td class="p-3 text-center"><a class="text-blue-700 text-xl font-bold" href="{{ route('magazijn.leveringen', $product->Id) }}" aria-label="Leveringsinformatie bekijken"><span aria-hidden="true">?</span></a></td>
                                     </tr>
                                 @empty
                                     <tr><td colspan="6" class="p-3">Er zijn geen producten in het magazijn.</td></tr>

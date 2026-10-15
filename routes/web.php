@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AllergeenController;
 use App\Http\Controllers\LeveringController;
 use App\Http\Controllers\KlantController;
+use App\Http\Controllers\LeverancierController;
 use App\Http\Controllers\MagazijnController;
 use App\Http\Controllers\MagazijnmedewerkerController;
 use App\Http\Controllers\ProfileController;
@@ -23,6 +24,10 @@ Route::get('/magazijnmedewerker', [MagazijnmedewerkerController::class, 'index']
 
 Route::get('/magazijn', [MagazijnController::class, 'index'])
     ->name('magazijn.index')
+    ->middleware(['auth', 'role:magazijnmedewerker,admin']);
+
+Route::get('/leveranciers', [LeverancierController::class, 'index'])
+    ->name('leveranciers.index')
     ->middleware(['auth', 'role:magazijnmedewerker,admin']);
 
 Route::get('/klant', [KlantController::class, 'index'])

@@ -33,6 +33,9 @@
                         <x-nav-link :href="route('magazijn.index')" :active="request()->routeIs('magazijn.*')">
                             {{ __('Magazijnoverzicht') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('leveranciers.index')" :active="request()->routeIs('leveranciers.*')">
+                            {{ __('Overzicht leveranciers') }}
+                        </x-nav-link>
                     @endif
 
                     @if (in_array($userRole, ['admin', 'klant']))
@@ -108,6 +111,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('magazijn.index')" :active="request()->routeIs('magazijn.*')">
                     {{ __('Magazijnoverzicht') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('leveranciers.index')" :active="request()->routeIs('leveranciers.*')">
+                    {{ __('Overzicht leveranciers') }}
                 </x-responsive-nav-link>
             @endif
 
