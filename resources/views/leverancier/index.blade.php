@@ -29,7 +29,13 @@
                                         <td class="p-3">{{ $leverancier->LeverancierNummer }}</td>
                                         <td class="p-3">{{ $leverancier->Mobiel }}</td>
                                         <td class="p-3 text-center">{{ $leverancier->AantalVerschillendeProducten }}</td>
-                                        <td class="p-3"></td>
+                <td class="p-3 text-center">
+                    <a href="{{ route('leveranciers.producten', $leverancier->Id) }}"
+                       aria-label="Producten van {{ $leverancier->Naam }} bekijken"
+                       class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900">
+                        Producten bekijken
+                    </a>
+                </td>
                                     </tr>
                                 @empty
                                     <tr>

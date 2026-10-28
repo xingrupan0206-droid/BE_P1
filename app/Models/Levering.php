@@ -12,6 +12,14 @@ class Levering extends Model
     protected $primaryKey = 'Id';
     public $timestamps = false;
 
+    protected $fillable = [
+        'ProductId',
+        'LeverancierId',
+        'Aantal',
+        'DatumLevering',
+        'DatumEerstVolgendeLevering',
+    ];
+
     public static function voorProduct(int $productId): Collection
     {
         return DB::table('ProductPerLeverancier as pl')

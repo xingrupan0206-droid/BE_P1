@@ -5,6 +5,8 @@ use App\Http\Controllers\AllergeenController;
 use App\Http\Controllers\LeveringController;
 use App\Http\Controllers\KlantController;
 use App\Http\Controllers\LeverancierController;
+use App\Http\Controllers\LeverancierLeveringController;
+use App\Http\Controllers\LeverancierProductController;
 use App\Http\Controllers\MagazijnController;
 use App\Http\Controllers\MagazijnmedewerkerController;
 use App\Http\Controllers\ProfileController;
@@ -29,6 +31,18 @@ Route::get('/magazijn', [MagazijnController::class, 'index'])
 Route::get('/leveranciers', [LeverancierController::class, 'index'])
     ->name('leveranciers.index')
     ->middleware(['auth', 'role:magazijnmedewerker,admin']);
+Route::get('/leveranciers/{leverancierId}/producten', [LeverancierProductController::class, 'index'])
+    ->whereNumber('leverancierId')
+    ->middleware(['auth', 'role:magazijnmedewerker,admin'])
+    ->name('leveranciers.producten');
+Route::get('/leveranciers/{leverancierId}/producten/{productId}/levering', [LeverancierLeveringController::class, 'create'])
+    ->whereNumber(['leverancierId', 'productId'])
+    ->middleware(['auth', 'role:magazijnmedewerker,admin'])
+    ->name('leveranciers.levering.create');
+Route::post('/leveranciers/{leverancierId}/producten/{productId}/levering', [LeverancierLeveringController::class, 'store'])
+    ->whereNumber(['leverancierId', 'productId'])
+    ->middleware(['auth', 'role:magazijnmedewerker,admin'])
+    ->name('leveranciers.levering.store');
 
 Route::get('/klant', [KlantController::class, 'index'])
     ->name('klant.index')
