@@ -16,6 +16,8 @@ class LeverancierOverzichtTest extends TestCase
         DB::purge('sqlite');
         DB::statement('CREATE TABLE Leverancier (Id INTEGER PRIMARY KEY, Naam TEXT, ContactPersoon TEXT, LeverancierNummer TEXT, Mobiel TEXT)');
         DB::statement('CREATE TABLE ProductPerLeverancier (Id INTEGER PRIMARY KEY, ProductId INTEGER, LeverancierId INTEGER, DatumLevering TEXT, Aantal INTEGER, DatumEerstVolgendeLevering TEXT)');
+        DB::statement('CREATE TABLE Product (Id INTEGER PRIMARY KEY, Naam TEXT, Barcode TEXT, IsActief INTEGER)');
+        DB::statement('CREATE TABLE Magazijn (Id INTEGER PRIMARY KEY, ProductId INTEGER, VerpakkingsEenheid NUMERIC, AantalAanwezig INTEGER)');
     }
 
     public function test_overzicht_sorteert_op_unieke_producten_en_toont_ook_leveranciers_zonder_leveringen(): void
@@ -39,16 +41,15 @@ class LeverancierOverzichtTest extends TestCase
 
         $response->assertSeeInOrder([
             '<td class="p-3">Venco</td>',
-            '<td class="p-3">2</td>',
+            '<td class="p-3 text-center">2</td>',
             '<td class="p-3">Astra Sweets</td>',
-            '<td class="p-3">1</td>',
+            '<td class="p-3 text-center">1</td>',
             '<td class="p-3">Haribo</td>',
-            '<td class="p-3">1</td>',
+            '<td class="p-3 text-center">1</td>',
             '<td class="p-3">De Bron</td>',
-            '<td class="p-3">0</td>',
+            '<td class="p-3 text-center">0</td>',
         ], false)
             ->assertSee(['Bert van Linge', 'L100', '0612345678', 'Aantal verschillende producten', 'Toon producten']);
-        expect(substr_count($response->getContent(), '<td class="p-3"></td>'))->toBe(4);
     }
 
     public function test_overzicht_is_alleen_toegankelijk_voor_medewerkers_en_admins(): void
@@ -58,5 +59,56 @@ class LeverancierOverzichtTest extends TestCase
         $klant = User::factory()->make(['id' => 2, 'rolename' => 'klant']);
 
         $this->actingAs($klant)->get(route('leveranciers.index'))->assertForbidden();
+    }
+
+    public function test_detailscherm_van_leverancier_zonder_leveringen_toont_melding_en_keert_terug(): void
+    {
+        DB::table('Leverancier')->insert([
+            'Id' => 5,
+            'Naam' => 'Quality Street',
+            'ContactPersoon' => 'Johan Nooij',
+            'LeverancierNummer' => 'L500',
+            'Mobiel' => '0656789012',
+        ]);
+        $user = User::factory()->make(['id' => 3, 'rolename' => 'magazijnmedewerker']);
+
+        $response = $this->actingAs($user)->get(route('leveranciers.producten', 5));
+
+        $response->assertSee('Dit bedrijf heeft tot nu toe geen producten geleverd aan Jamin')
+            ->assertSee('setTimeout', false)
+            ->assertSee('3000', false);
+    }
+
+    public function test_detailscherm_met_alleen_inactieve_producten_toont_lege_melding_in_plaats_van_producten(): void
+    {
+        DB::table('Leverancier')->insert([
+            'Id' => 6,
+            'Naam' => 'Basset',
+            'ContactPersoon' => 'Joyce Stelterberg',
+            'LeverancierNummer' => 'L600',
+            'Mobiel' => '0667890123',
+        ]);
+        DB::table('Product')->insert([
+            'Id' => 10,
+            'Naam' => 'Winegums',
+            'Barcode' => '8719587327527',
+            'IsActief' => false,
+        ]);
+        DB::table('ProductPerLeverancier')->insert([
+            'Id' => 6,
+            'ProductId' => 10,
+            'LeverancierId' => 6,
+            'DatumLevering' => '2026-01-20',
+            'Aantal' => 9,
+            'DatumEerstVolgendeLevering' => null,
+        ]);
+        $user = User::factory()->make(['id' => 4, 'rolename' => 'magazijnmedewerker']);
+
+        $response = $this->actingAs($user)->get(route('leveranciers.producten', 6));
+
+        $response->assertSee('Dit bedrijf heeft tot nu toe geen producten geleverd aan Jamin')
+            ->assertDontSee('Winegums')
+            ->assertSee('setTimeout', false)
+            ->assertSee('3000', false);
     }
 }

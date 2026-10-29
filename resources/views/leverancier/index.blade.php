@@ -32,8 +32,15 @@
                 <td class="p-3 text-center">
                     <a href="{{ route('leveranciers.producten', $leverancier->Id) }}"
                        aria-label="Producten van {{ $leverancier->Naam }} bekijken"
-                       class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900">
-                        Producten bekijken
+                       class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-700 shadow-sm transition hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="m3.75 7.5 8.25-4.5 8.25 4.5v9L12 21l-8.25-4.5v-9Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="m3.75 7.5 8.25 4.5 8.25-4.5M12 12v9" />
+                        </svg>
+                        <span class="sr-only">Producten van {{ $leverancier->Naam }} bekijken</span>
                     </a>
                 </td>
                                     </tr>

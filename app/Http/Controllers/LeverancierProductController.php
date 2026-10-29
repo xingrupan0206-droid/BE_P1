@@ -11,6 +11,8 @@ class LeverancierProductController extends Controller
 
     public function index(int $leverancierId): View
     {
-        return view('leverancier.producten', $this->provider->paginaData($leverancierId));
+        $data = $this->provider->paginaData($leverancierId);
+
+        return view($this->provider->view($data), $data);
     }
 }

@@ -1,6 +1,13 @@
 CREATE DATABASE IF NOT EXISTS laravel;
 USE laravel;
 
+DROP TABLE IF EXISTS Magazijn;
+DROP TABLE IF EXISTS ProductPerAllergeen;
+DROP TABLE IF EXISTS ProductPerLeverancier;
+DROP TABLE IF EXISTS Allergeen;
+DROP TABLE IF EXISTS Product;
+DROP TABLE IF EXISTS Leverancier;
+
 -- =========================================
 -- 1. PRODUCT
 -- =========================================
@@ -8,7 +15,8 @@ USE laravel;
 CREATE TABLE Product (
     Id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     Naam VARCHAR(100) NOT NULL,
-    Barcode VARCHAR(13) NOT NULL UNIQUE
+    Barcode VARCHAR(13) NOT NULL UNIQUE,
+    IsActief BOOLEAN NOT NULL DEFAULT TRUE
 ) ENGINE=InnoDB;
 
 INSERT INTO Product (Id, Naam, Barcode) VALUES
@@ -25,6 +33,8 @@ INSERT INTO Product (Id, Naam, Barcode) VALUES
 (11, 'Drop Munten', '8719587322345'),
 (12, 'Kruis Drop', '8719587322265'),
 (13, 'Zoute Ruitjes', '8719587323256');
+
+UPDATE Product SET IsActief = FALSE WHERE Id = 10;
 
 
 -- =========================================

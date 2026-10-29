@@ -14,11 +14,6 @@
                     </div>
                     @if (session('status'))
                     <div class="mb-4 text-green-700">{{ session('status') }}</div>@endif
-                    @if ($producten->isEmpty())
-                        <div class="mb-4 text-center font-medium">Dit bedrijf heeft tot nu toe geen producten geleverd aan
-                            Jamin</div>
-                        <script>setTimeout(() => window.location.href = @json(route('leveranciers.index')), 3000);</script>
-                    @endif
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse text-left">
                             <thead>
@@ -43,10 +38,6 @@
                                                 aria-label="Nieuwe levering toevoegen">+</a></td>
                                     </tr>
                                 @endforeach
-                                @if ($producten->isEmpty())
-                                    <tr>
-                                        <td colspan="5" class="p-3 text-center">Geen producten</td>
-                                </tr>@endif
                             </tbody>
                         </table>
                     </div>

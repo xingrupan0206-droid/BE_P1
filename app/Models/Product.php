@@ -11,4 +11,11 @@ class Product extends Model
     protected $primaryKey = 'Id';
 
     public $timestamps = false;
+
+    protected function casts(): array
+    {
+        return [
+            'IsActief' => 'boolean',
+        ];
+    }
 }
