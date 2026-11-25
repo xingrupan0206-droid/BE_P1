@@ -2,27 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Levering;
-use App\Models\Magazijn;
-use App\Models\Product;
+use App\Providers\magazijn\levering\Levering;
 use Illuminate\View\View;
 
 class LeveringController extends Controller
 {
+    public function __construct(private Levering $provider) {}
+
     public function show(int $productId): View
     {
-        $product = Product::query()->find($productId);
-        abort_if($product === null, 404);
-
-        $voorraad = Magazijn::voorraadVoorProduct($productId);
-        $leveringen = Levering::voorProduct($productId);
-
-        return view('magazijn.levering', [
-            'product' => $product,
-            'geenVoorraad' => $voorraad <= 0,
-            'leveringen' => $leveringen,
-            'leveranciers' => $leveringen->unique('LeverancierId'),
-            'volgendeLevering' => $leveringen->last()?->DatumEerstVolgendeLevering,
-        ]);
+        return view('magazijn.levering', $this->provider->paginaData($productId));
     }
 }

@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS ProductPerLeverancier;
 DROP TABLE IF EXISTS Allergeen;
 DROP TABLE IF EXISTS Product;
 DROP TABLE IF EXISTS Leverancier;
+DROP TABLE IF EXISTS Contact;
 
 -- =========================================
 -- 1. PRODUCT
@@ -187,3 +188,21 @@ VALUES
 (15, 5, 11, '2024-11-19', 60, '2024-11-26'),
 (16, 5, 12, '2024-11-11', 45, NULL),
 (17, 5, 13, '2024-11-12', 23, NULL);
+
+CREATE TABLE Contact (
+    Id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    Straat VARCHAR(100) NOT NULL,
+    Huisnummer INT NOT NULL,
+    Postcode VARCHAR(10) NOT NULL,
+    Stad VARCHAR(100) NOT NULL
+) ENGINE=InnoDB;
+
+INSERT INTO Contact
+(Id, Straat, Huisnummer, Postcode, Stad)
+VALUES
+(1, 'Van Gilslaan', 34, '1045CB', 'Hilvarenbeek'),
+(2, 'Den Dolderpad', 2, '1067RC', 'Utrecht'),
+(3, 'Fredo Raalteweg', 257, '1236OP', 'Nijmegen'),
+(4, 'Bertrand Russellhof', 21, '2034AP', 'Den Haag'),
+(5, 'Leon van Bonstraat', 213, '145XC', 'Lunteren'),
+(6, 'Bea van Lingenlaan', 234, '2197FG', 'Sint Pancras');
