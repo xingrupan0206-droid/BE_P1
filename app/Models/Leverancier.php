@@ -17,9 +17,6 @@ class Leverancier extends Model
         'ContactPersoon',
         'LeverancierNummer',
         'Mobiel',
-        'Straatnaam',
-        'Huisnummer',
-        'Postcode',
-        'Stad',
+        'ContactId',
     ];
 }

@@ -2,48 +2,101 @@
 
 namespace App\Providers\leverancier\wijzigen;
 
-use App\Models\Leverancier;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class Wijzigen
 {
-    public function overzicht(): LengthAwarePaginator
+    public function overzicht(): Collection
     {
-        return DB::table('Leverancier')
+        return DB::table('Leverancier as l')
+            ->join('Contact as c', 'c.Id', '=', 'l.ContactId')
             ->select([
-                'Id',
-                'Naam',
-                'ContactPersoon',
-                'LeverancierNummer',
-                'Mobiel',
-                'Straatnaam',
-                'Huisnummer',
-                'Postcode',
-                'Stad',
+                'l.Id',
+                'l.Naam',
+                'l.ContactPersoon',
+                'l.LeverancierNummer',
+                'l.Mobiel',
+                'l.ContactId',
+                'c.Straat as Straatnaam',
+                'c.Huisnummer',
+                'c.Postcode',
+                'c.Stad',
             ])
-            ->orderBy('Naam')
-            ->paginate(4);
+            ->orderBy('l.Naam')
+            ->get();
     }
 
-    public function details(int $leverancierId): Leverancier
+    public function details(int $leverancierId): object
     {
-        return Leverancier::query()->findOrFail($leverancierId);
+        $leverancier = DB::table('Leverancier as l')
+            ->join('Contact as c', 'c.Id', '=', 'l.ContactId')
+            ->where('l.Id', $leverancierId)
+            ->select([
+                'l.Id',
+                'l.Naam',
+                'l.ContactPersoon',
+                'l.LeverancierNummer',
+                'l.Mobiel',
+                'l.ContactId',
+                'c.Straat as Straatnaam',
+                'c.Huisnummer',
+                'c.Postcode',
+                'c.Stad',
+            ])
+            ->first();
+
+        abort_if($leverancier === null, 404);
+
+        return $leverancier;
     }
 
-    public function wijzigData(int $leverancierId): Leverancier
+    public function wijzigData(int $leverancierId): object
     {
-        return Leverancier::query()->findOrFail($leverancierId);
+        return $this->details($leverancierId);
     }
 
-    public function opslaan(int $leverancierId, array $gegevens): RedirectResponse
+    public function opslaan(Request $request, int $leverancierId): RedirectResponse
     {
-        $leverancier = Leverancier::query()->findOrFail($leverancierId);
-        $leverancier->update($gegevens);
+        $gegevens = $request->validate([
+            'Naam' => ['required', 'string', 'max:100'],
+            'ContactPersoon' => ['required', 'string', 'max:100'],
+            'LeverancierNummer' => ['required', 'string', 'max:20', Rule::unique('Leverancier', 'LeverancierNummer')->ignore($leverancierId, 'Id')],
+            'Mobiel' => ['required', 'string', 'max:20'],
+            'Straatnaam' => ['required', 'string', 'max:100'],
+            'Huisnummer' => ['required', 'integer', 'min:1'],
+            'Postcode' => ['required', 'string', 'max:10'],
+            'Stad' => ['required', 'string', 'max:100'],
+        ]);
+
+        $leverancier = DB::table('Leverancier')->where('Id', $leverancierId)->first();
+        abort_if($leverancier === null, 404);
+
+        DB::transaction(function () use ($leverancier, $leverancierId, $gegevens): void {
+            DB::table('Leverancier')
+                ->where('Id', $leverancierId)
+                ->update([
+                    'Naam' => $gegevens['Naam'],
+                    'ContactPersoon' => $gegevens['ContactPersoon'],
+                    'LeverancierNummer' => $gegevens['LeverancierNummer'],
+                    'Mobiel' => $gegevens['Mobiel'],
+                ]);
+
+            DB::table('Contact')
+                ->where('Id', $leverancier->ContactId)
+                ->update([
+                    'Straat' => $gegevens['Straatnaam'],
+                    'Huisnummer' => $gegevens['Huisnummer'],
+                    'Postcode' => $gegevens['Postcode'],
+                    'Stad' => $gegevens['Stad'],
+                ]);
+        });
 
         return redirect()
-            ->route('leveranciers.wijzigen.edit', $leverancier->Id)
+            ->route('leveranciers.wijzigen.edit', $leverancierId)
             ->with('status', 'De wijzigingen zijn doorgevoerd');
     }
 }

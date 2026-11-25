@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Providers\leverancier\wijzigen\Wijzigen;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class LeverancierWijzigenController extends Controller
@@ -35,17 +34,6 @@ class LeverancierWijzigenController extends Controller
 
     public function update(Request $request, int $leverancierId): RedirectResponse
     {
-        $validated = $request->validate([
-            'Naam' => ['required', 'string', 'max:100'],
-            'ContactPersoon' => ['required', 'string', 'max:100'],
-            'LeverancierNummer' => ['required', 'string', 'max:20', Rule::unique('Leverancier', 'LeverancierNummer')->ignore($leverancierId, 'Id')],
-            'Mobiel' => ['required', 'string', 'max:20'],
-            'Straatnaam' => ['nullable', 'string', 'max:100'],
-            'Huisnummer' => ['nullable', 'string', 'max:10'],
-            'Postcode' => ['nullable', 'string', 'max:10'],
-            'Stad' => ['nullable', 'string', 'max:100'],
-        ]);
-
-        return $this->provider->opslaan($leverancierId, $validated);
+        return $this->provider->opslaan($request, $leverancierId);
     }
 }

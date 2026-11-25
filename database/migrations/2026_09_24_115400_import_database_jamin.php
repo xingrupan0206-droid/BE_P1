@@ -23,16 +23,23 @@ return new class extends Migration
             $table->string('Omschrijving', 255);
         });
 
+        Schema::create('Contact', function (Blueprint $table): void {
+            $table->increments('Id');
+            $table->string('Straat', 100);
+            $table->integer('Huisnummer');
+            $table->string('Postcode', 10);
+            $table->string('Stad', 100);
+        });
+
         Schema::create('Leverancier', function (Blueprint $table): void {
             $table->increments('Id');
             $table->string('Naam', 100);
             $table->string('ContactPersoon', 100);
             $table->string('LeverancierNummer', 20)->unique();
             $table->string('Mobiel', 20);
-            $table->string('Straatnaam', 100)->nullable();
-            $table->string('Huisnummer', 10)->nullable();
-            $table->string('Postcode', 10)->nullable();
-            $table->string('Stad', 100)->nullable();
+            $table->unsignedInteger('ContactId');
+
+            $table->foreign('ContactId')->references('Id')->on('Contact');
         });
 
         Schema::create('Magazijn', function (Blueprint $table): void {
@@ -75,6 +82,7 @@ return new class extends Migration
         Schema::dropIfExists('ProductPerAllergeen');
         Schema::dropIfExists('Magazijn');
         Schema::dropIfExists('Leverancier');
+        Schema::dropIfExists('Contact');
         Schema::dropIfExists('Allergeen');
         Schema::dropIfExists('Product');
     }
