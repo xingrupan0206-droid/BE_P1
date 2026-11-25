@@ -7,6 +7,7 @@ use App\Http\Controllers\KlantController;
 use App\Http\Controllers\LeverancierController;
 use App\Http\Controllers\LeverancierLeveringController;
 use App\Http\Controllers\LeverancierProductController;
+use App\Http\Controllers\LeverancierWijzigenController;
 use App\Http\Controllers\MagazijnController;
 use App\Http\Controllers\MagazijnmedewerkerController;
 use App\Http\Controllers\ProfileController;
@@ -43,6 +44,25 @@ Route::post('/leveranciers/{leverancierId}/producten/{productId}/levering', [Lev
     ->whereNumber(['leverancierId', 'productId'])
     ->middleware(['auth', 'role:magazijnmedewerker,admin'])
     ->name('leveranciers.levering.store');
+
+Route::get('/leveranciers/wijzigen', [LeverancierWijzigenController::class, 'index'])
+    ->name('leveranciers.wijzigen.index')
+    ->middleware(['auth', 'role:manager,admin,magazijnmedewerker']);
+
+Route::get('/leveranciers/wijzigen/{leverancierId}', [LeverancierWijzigenController::class, 'show'])
+    ->whereNumber('leverancierId')
+    ->name('leveranciers.wijzigen.show')
+    ->middleware(['auth', 'role:manager,admin,magazijnmedewerker']);
+
+Route::get('/leveranciers/wijzigen/{leverancierId}/edit', [LeverancierWijzigenController::class, 'edit'])
+    ->whereNumber('leverancierId')
+    ->name('leveranciers.wijzigen.edit')
+    ->middleware(['auth', 'role:manager,admin,magazijnmedewerker']);
+
+Route::put('/leveranciers/wijzigen/{leverancierId}', [LeverancierWijzigenController::class, 'update'])
+    ->whereNumber('leverancierId')
+    ->name('leveranciers.wijzigen.update')
+    ->middleware(['auth', 'role:manager,admin,magazijnmedewerker']);
 
 Route::get('/klant', [KlantController::class, 'index'])
     ->name('klant.index')

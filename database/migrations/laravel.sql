@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS Product;
 DROP TABLE IF EXISTS Leverancier;
 DROP TABLE IF EXISTS Contact;
 
+
 -- =========================================
 -- 1. PRODUCT
 -- =========================================
@@ -57,7 +58,30 @@ INSERT INTO Allergeen (Id, Naam, Omschrijving) VALUES
 
 
 -- =========================================
--- 3. LEVERANCIER
+-- 3. CONTACT
+-- =========================================
+
+CREATE TABLE Contact (
+    Id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    Straat VARCHAR(100) NOT NULL,
+    Huisnummer INT NOT NULL,
+    Postcode VARCHAR(10) NOT NULL,
+    Stad VARCHAR(100) NOT NULL
+) ENGINE=InnoDB;
+
+INSERT INTO Contact
+(Id, Straat, Huisnummer, Postcode, Stad)
+VALUES
+(1, 'Van Gilslaan', 34, '1045CB', 'Hilvarenbeek'),
+(2, 'Den Dolderpad', 2, '1067RC', 'Utrecht'),
+(3, 'Fredo Raalteweg', 257, '1236OP', 'Nijmegen'),
+(4, 'Bertrand Russellhof', 21, '2034AP', 'Den Haag'),
+(5, 'Leon van Bonstraat', 213, '145XC', 'Lunteren'),
+(6, 'Bea van Lingenlaan', 234, '2197FG', 'Sint Pancras');
+
+
+-- =========================================
+-- 4. LEVERANCIER
 -- =========================================
 
 CREATE TABLE Leverancier (
@@ -65,22 +89,27 @@ CREATE TABLE Leverancier (
     Naam VARCHAR(100) NOT NULL,
     ContactPersoon VARCHAR(100) NOT NULL,
     LeverancierNummer VARCHAR(20) NOT NULL UNIQUE,
-    Mobiel VARCHAR(20) NOT NULL
+    Mobiel VARCHAR(20) NOT NULL,
+    ContactId INT UNSIGNED NOT NULL,
+
+    CONSTRAINT FK_Leverancier_Contact
+        FOREIGN KEY (ContactId)
+        REFERENCES Contact(Id)
 ) ENGINE=InnoDB;
 
 INSERT INTO Leverancier
-(Id, Naam, ContactPersoon, LeverancierNummer, Mobiel)
+(Id, Naam, ContactPersoon, LeverancierNummer, Mobiel, ContactId)
 VALUES
-(1, 'Venco', 'Bert van Linge', 'L1029384719', '06-28493827'),
-(2, 'Astra Sweets', 'Jasper de Monte', 'L1029284315', '06-39398734'),
-(3, 'Haribo', 'Sven Stalman', 'L1029324748', '06-24383291'),
-(4, 'Basset', 'Joyce Stelterberg', 'L1023845773', '06-48293823'),
-(5, 'De Bron', 'Remco Veenstra', 'L1023857736', '06-34291234'),
-(6, 'Quality Street', 'Johan Nooij', 'L1029234586', '06-23458456');
+(1, 'Venco', 'Bert van Linge', 'L1029384719', '06-28493827', 1),
+(2, 'Astra Sweets', 'Jasper de Monte', 'L1029284315', '06-39398734', 2),
+(3, 'Haribo', 'Sven Stalman', 'L1029324748', '06-24383291', 3),
+(4, 'Basset', 'Joyce Stelterberg', 'L1023845773', '06-48293823', 4),
+(5, 'De Bron', 'Remco Veenstra', 'L1023857736', '06-34291234', 5),
+(6, 'Quality Street', 'Johan Nooij', 'L1029234586', '06-23458456', 6);
 
 
 -- =========================================
--- 4. MAGAZIJN
+-- 5. MAGAZIJN
 -- =========================================
 
 CREATE TABLE Magazijn (
@@ -113,7 +142,7 @@ VALUES
 
 
 -- =========================================
--- 5. PRODUCT PER ALLERGEEN
+-- 6. PRODUCT PER ALLERGEEN
 -- =========================================
 
 CREATE TABLE ProductPerAllergeen (
@@ -148,7 +177,7 @@ VALUES
 
 
 -- =========================================
--- 6. PRODUCT PER LEVERANCIER
+-- 7. PRODUCT PER LEVERANCIER
 -- =========================================
 
 CREATE TABLE ProductPerLeverancier (
@@ -188,21 +217,3 @@ VALUES
 (15, 5, 11, '2024-11-19', 60, '2024-11-26'),
 (16, 5, 12, '2024-11-11', 45, NULL),
 (17, 5, 13, '2024-11-12', 23, NULL);
-
-CREATE TABLE Contact (
-    Id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    Straat VARCHAR(100) NOT NULL,
-    Huisnummer INT NOT NULL,
-    Postcode VARCHAR(10) NOT NULL,
-    Stad VARCHAR(100) NOT NULL
-) ENGINE=InnoDB;
-
-INSERT INTO Contact
-(Id, Straat, Huisnummer, Postcode, Stad)
-VALUES
-(1, 'Van Gilslaan', 34, '1045CB', 'Hilvarenbeek'),
-(2, 'Den Dolderpad', 2, '1067RC', 'Utrecht'),
-(3, 'Fredo Raalteweg', 257, '1236OP', 'Nijmegen'),
-(4, 'Bertrand Russellhof', 21, '2034AP', 'Den Haag'),
-(5, 'Leon van Bonstraat', 213, '145XC', 'Lunteren'),
-(6, 'Bea van Lingenlaan', 234, '2197FG', 'Sint Pancras');

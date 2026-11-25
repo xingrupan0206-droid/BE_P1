@@ -29,6 +29,10 @@ return new class extends Migration
             $table->string('ContactPersoon', 100);
             $table->string('LeverancierNummer', 20)->unique();
             $table->string('Mobiel', 20);
+            $table->string('Straatnaam', 100)->nullable();
+            $table->string('Huisnummer', 10)->nullable();
+            $table->string('Postcode', 10)->nullable();
+            $table->string('Stad', 100)->nullable();
         });
 
         Schema::create('Magazijn', function (Blueprint $table): void {

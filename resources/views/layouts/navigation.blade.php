@@ -33,8 +33,17 @@
                         <x-nav-link :href="route('magazijn.index')" :active="request()->routeIs('magazijn.*')">
                             {{ __('Magazijnoverzicht') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('leveranciers.index')" :active="request()->routeIs('leveranciers.*')">
+                        <x-nav-link :href="route('leveranciers.index')" :active="request()->routeIs('leveranciers.index', 'leveranciers.producten', 'leveranciers.levering.*')">
                             {{ __('Overzicht leveranciers') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('leveranciers.wijzigen.index')" :active="request()->routeIs('leveranciers.wijzigen.*')">
+                            {{ __('Wijzigen Leveranciers') }}
+                        </x-nav-link>
+                    @endif
+
+                    @if ($userRole === 'manager')
+                        <x-nav-link :href="route('leveranciers.wijzigen.index')" :active="request()->routeIs('leveranciers.wijzigen.*')">
+                            {{ __('Wijzigen Leveranciers') }}
                         </x-nav-link>
                     @endif
 
@@ -112,8 +121,17 @@
                 <x-responsive-nav-link :href="route('magazijn.index')" :active="request()->routeIs('magazijn.*')">
                     {{ __('Magazijnoverzicht') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('leveranciers.index')" :active="request()->routeIs('leveranciers.*')">
+                <x-responsive-nav-link :href="route('leveranciers.index')" :active="request()->routeIs('leveranciers.index', 'leveranciers.producten', 'leveranciers.levering.*')">
                     {{ __('Overzicht leveranciers') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('leveranciers.wijzigen.index')" :active="request()->routeIs('leveranciers.wijzigen.*')">
+                    {{ __('Wijzigen Leveranciers') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if ($userRole === 'manager')
+                <x-responsive-nav-link :href="route('leveranciers.wijzigen.index')" :active="request()->routeIs('leveranciers.wijzigen.*')">
+                    {{ __('Wijzigen Leveranciers') }}
                 </x-responsive-nav-link>
             @endif
 

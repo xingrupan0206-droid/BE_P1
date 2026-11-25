@@ -12,4 +12,14 @@ class Leverancier extends Model
 
     public $timestamps = false;
 
+    protected $fillable = [
+        'Naam',
+        'ContactPersoon',
+        'LeverancierNummer',
+        'Mobiel',
+        'Straatnaam',
+        'Huisnummer',
+        'Postcode',
+        'Stad',
+    ];
 }
