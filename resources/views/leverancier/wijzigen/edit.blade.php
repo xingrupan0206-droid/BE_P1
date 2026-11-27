@@ -16,6 +16,13 @@
                         </script>
                     @endif
 
+                    @if (session('error'))
+                        <div class="mb-4 text-red-700">{{ session('error') }}</div>
+                        <script>
+                            setTimeout(() => window.location.href = @json(route('leveranciers.wijzigen.show', $leverancier->Id)), 3000);
+                        </script>
+                    @endif
+
                     <form method="POST" action="{{ route('leveranciers.wijzigen.update', $leverancier->Id) }}" class="space-y-4">
                         @csrf
                         @method('PUT')

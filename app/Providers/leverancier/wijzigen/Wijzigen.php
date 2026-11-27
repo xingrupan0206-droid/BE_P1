@@ -75,25 +75,31 @@ class Wijzigen
         $leverancier = DB::table('Leverancier')->where('Id', $leverancierId)->first();
         abort_if($leverancier === null, 404);
 
-        DB::transaction(function () use ($leverancier, $leverancierId, $gegevens): void {
-            DB::table('Leverancier')
-                ->where('Id', $leverancierId)
-                ->update([
-                    'Naam' => $gegevens['Naam'],
-                    'ContactPersoon' => $gegevens['ContactPersoon'],
-                    'LeverancierNummer' => $gegevens['LeverancierNummer'],
-                    'Mobiel' => $gegevens['Mobiel'],
-                ]);
+        try {
+            DB::transaction(function () use ($leverancier, $leverancierId, $gegevens): void {
+                DB::table('Leverancier')
+                    ->where('Id', $leverancierId)
+                    ->update([
+                        'Naam' => $gegevens['Naam'],
+                        'ContactPersoon' => $gegevens['ContactPersoon'],
+                        'LeverancierNummer' => $gegevens['LeverancierNummer'],
+                        'Mobiel' => $gegevens['Mobiel'],
+                    ]);
 
-            DB::table('Contact')
-                ->where('Id', $leverancier->ContactId)
-                ->update([
-                    'Straat' => $gegevens['Straatnaam'],
-                    'Huisnummer' => $gegevens['Huisnummer'],
-                    'Postcode' => $gegevens['Postcode'],
-                    'Stad' => $gegevens['Stad'],
-                ]);
-        });
+                DB::table('Contact')
+                    ->where('Id', $leverancier->ContactId)
+                    ->update([
+                        'Straat' => $gegevens['Straatnaam'],
+                        'Huisnummer' => $gegevens['Huisnummer'],
+                        'Postcode' => $gegevens['Postcode'],
+                        'Stad' => $gegevens['Stad'],
+                    ]);
+            });
+        } catch (\Throwable $e) {
+            return redirect()
+                ->route('leveranciers.wijzigen.edit', $leverancierId)
+                ->with('error', 'Door een technische storing is het niet mogelijk de wijziging door te voeren. Probeer het op een later moment nog eens');
+        }
 
         return redirect()
             ->route('leveranciers.wijzigen.edit', $leverancierId)
